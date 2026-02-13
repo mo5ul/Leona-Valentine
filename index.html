@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>First Valentines c:</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600&display=swap');
+* { box-sizing: border-box; font-family: 'Chakra Petch', sans-serif; margin: 0; padding: 0; }
+body { height: 100vh; display: flex; justify-content: center; align-items: center;
+  background-color: #020b3d;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='90' height='90'><text x='15' y='65' font-size='42'>🌻</text></svg>");
+  background-repeat: repeat; background-size: 90px 90px; overflow: hidden;
+}
+@keyframes drift {0% {background-position:0 0;} 50% {background-position:60px 60px;} 100% {background-position:0 0;}}
+body { animation: drift 15s linear infinite; }
+
+.container, .celebrate-container { background:#fff; padding:36px 40px 34px; border-radius:28px;
+  box-shadow:0 22px 45px rgba(0,0,0,0.35), inset 0 0 0 4px #ffcc33; text-align:center;
+  position: relative; max-width:480px; width:90%;
+}
+
+.character-wrapper { position: relative; margin-bottom: 8px; transition: transform 0.3s ease; }
+.character-img { width: 180px; display:block; margin:0 auto; }
+
+.speech-bubble {
+  position:absolute; bottom:100%; left:50%; transform:translateX(-50%);
+  margin-bottom:16px; background:white; border:3px solid #000;
+  padding:18px 24px; border-radius:999px; font-size:18px; width:240px;
+  box-shadow:4px 5px 0 #000; transition:all 0.3s ease; white-space:normal; text-align:center;
+}
+.speech-bubble::before {
+  content:""; position:absolute; left:50%; bottom:-14px; transform:translateX(-50%);
+  border-top:14px solid black; border-left:9px solid transparent; border-right:9px solid transparent;
+}
+.speech-bubble::after {
+  content:""; position:absolute; left:50%; bottom:-11px; transform:translateX(-50%);
+  border-top:11px solid white; border-left:7px solid transparent; border-right:7px solid transparent;
+}
+@keyframes bubbleWiggle {0%{transform:translateX(-50%) rotate(0deg);} 25%{transform:translateX(-50%) rotate(3deg);} 50%{transform:translateX(-50%) rotate(-3deg);} 75%{transform:translateX(-50%) rotate(3deg);} 100%{transform:translateX(-50%) rotate(0deg);} }
+
+.buttons { margin-top:22px; display:flex; justify-content:center; gap:26px; }
+button { padding:14px 32px; font-size:17px; border-radius:999px; border:none; cursor:pointer; transition:transform 0.35s cubic-bezier(.25,1.4,.4,1); }
+
+/* Yes button */
+#yesBtn { background:linear-gradient(135deg,#ff5e78,#ffd166); color:white;
+  box-shadow:0 6px 0 #d9475f,0 0 15px rgba(255,209,102,0.7);
+  transform-origin:center; animation: yesGlow 2s infinite alternate;
+}
+@keyframes yesGlow {
+  0%{box-shadow:0 6px 0 #d9475f,0 0 15px #ff5e78,0 0 25px #ff7f90;}
+  50%{box-shadow:0 6px 0 #d9475f,0 0 30px #ff9aa0,0 0 40px #ffd166;}
+  100%{box-shadow:0 6px 0 #d9475f,0 0 25px #ff5e78,0 0 35px #ffd166;}
+}
+
+/* No button */
+#noBtn { background:linear-gradient(135deg,#ff4d4d,#ff99c8); color:white; position:relative;
+  box-shadow:0 6px 0 #d1435d,0 0 25px rgba(255,77,77,0.8); animation:noGlow 2s infinite alternate;
+}
+@keyframes noGlow { 0%{box-shadow:0 6px 0 #d1435d,0 0 25px rgba(255,77,77,0.8);} 50%{box-shadow:0 6px 0 #d1435d,0 0 40px rgba(255,153,200,1);} 100%{box-shadow:0 6px 0 #d1435d,0 0 30px rgba(255,77,77,0.8);} }
+
+.celebrate-container { display:none; flex-direction:column; align-items:center; }
+.celebrate-container img { width:180px; margin-bottom:16px; }
+.celebrate-container h1 { font-size:26px; color:#ff5e78; text-shadow:0 0 10px #ff9aa0,0 0 20px #ffd6a5; }
+
+.confetti { position:fixed; width:10px; height:10px; top:-10px; opacity:0.8; pointer-events:none; z-index:9999; border-radius:50%; animation:fall linear infinite;}
+@keyframes fall { to{transform:translateY(110vh) rotate(360deg); opacity:0;} }
+
+/* Stickman animations */
+@keyframes hopefulBounce {0%,100%{transform:translateY(0px);} 50%{transform:translateY(-8px);} }
+@keyframes sad2Slump {0%,100%{transform:translateY(0px);} 50%{transform:translateY(5px);} }
+@keyframes determinedLean {0%,100%{transform:rotate(0deg);} 50%{transform:rotate(-5deg);} }
+
+/* === FIX: PREVENT NO BUTTON SELECTION (TABLET) === */
+#noBtn {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+#noBtn:focus,
+#noBtn:active {
+  outline: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="mainContainer">
+  <div class="character-wrapper" id="characterWrapper">
+    <img src="./wimpy-stickman.png" class="character-img" id="characterImg" alt="Wimpy Kid">
+    <div class="speech-bubble" id="speechBubble">Hi Leona! Do you want to be my valentine? :D</div>
+  </div>
+
+  <div class="buttons">
+    <button id="yesBtn">Yes :D</button>
+    <button id="noBtn">No :(</button>
+  </div>
+</div>
+
+<div class="celebrate-container" id="celebrateContainer">
+  <img src="./happy-stickman.png" alt="Happy Stickman">
+  <h1>YAYYYYY I KNEW YOU WOULD SAY YES HEHEHE! NOW THE MOST BEAUTIFUL WOMAN IN THE ENTIRE WORLD IS MY VALENTINE! :D </h1>
+  <h1>I LOVE YOU SO MUCH!<3 </h1>
+</div>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const speechBubble = document.getElementById("speechBubble");
+const characterWrapper = document.getElementById("characterWrapper");
+const characterImg = document.getElementById("characterImg");
+const mainContainer = document.getElementById("mainContainer");
+const celebrateContainer = document.getElementById("celebrateContainer");
+
+const lines = [
+  "Hi Leona! Do you want to be my valentine? :D",
+  "Oh.",
+  "Really..? You don't want to be my valentine..?",
+  "Damn, you.. you really don't want to be my valentine I see.",
+  "Are you sure?:(",
+  "Are you really really sure?:((",
+  "Are you really really REALLY sure...? :(((",
+  "But...",
+  "I would keep you so happy though..",
+  "How about you consider it again! :D",
+  "One last time?",
+  "ONE last time...?",
+  "Okay then...",
+  "You know what?! No! I won't let you go! You have to say yes! >:("
+];
+
+let moves = 0;
+let lineIndex = 1;
+let offsetX = 0, offsetY = 0;
+let yesClicked = false;
+const colors = ["#ff5e78","#ff9aa0","#ffd6a5","#ffb347","#ffcc33","#f9f871","#a0e7e5","#b4f8c8"];
+
+function noHoverEffect() {
+  if (yesClicked) return;
+  moves++;
+
+  if(lineIndex < lines.length){
+    typeText(lines[lineIndex]);
+    characterWrapper.style.animation = "";
+
+    if(lineIndex === 9){
+      characterImg.src = "./wimpy-stickman-hopeful.png";
+      characterWrapper.style.animation = "hopefulBounce 0.6s ease-in-out";
+    } else if(lineIndex === 12){
+      characterImg.src = "./wimpy-stickman-sad2.png";
+      characterWrapper.style.animation = "sad2Slump 0.6s ease-in-out";
+    } else if(lineIndex === 13){
+      characterImg.src = "./wimpy-stickman-determined.png";
+      characterWrapper.style.animation = "determinedLean 0.6s ease-in-out";
+    } else if(lineIndex < 8){
+      characterImg.src = "./wimpy-stickman-sad.png";
+    }
+
+    yesBtn.style.transform = `scale(${1 + (lineIndex+1)*0.25})`;
+    lineIndex++;
+  }
+
+  if(lineIndex >= lines.length){
+    noBtn.style.display = "none";
+    return;
+  }
+
+  speechBubble.style.animation = 'bubbleWiggle 0.5s ease';
+  const randomColor = colors[Math.floor(Math.random()*colors.length)];
+  speechBubble.style.color = randomColor;
+  setTimeout(()=>{ speechBubble.style.animation=''; speechBubble.style.color="#000"; },500);
+
+  const randomRotate = (Math.random()*10-5);
+  const randomTranslateX = (Math.random()*10-5);
+  const randomTranslateY = (Math.random()*6-3);
+  characterWrapper.style.transform = `rotate(${randomRotate}deg) translate(${randomTranslateX}px, ${randomTranslateY}px)`;
+
+  const bubbleRotate = (Math.random()*8-4);
+  speechBubble.style.transform = `translateX(-50%) rotate(${bubbleRotate}deg)`;
+  setTimeout(()=>{ characterWrapper.style.transform=""; speechBubble.style.transform="translateX(-50%)"; },300);
+
+  const moveX = (Math.random()>0.5?1:-1)*(180 + Math.random()*120);
+  const moveY = (Math.random()>0.5?1:-1)*(100 + Math.random()*60);
+  const rotate = (Math.random()*40-20);
+  offsetX += moveX; offsetY += moveY;
+  offsetX = Math.max(-200, Math.min(200, offsetX));
+  offsetY = Math.max(-150, Math.min(150, offsetY));
+  noBtn.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${rotate}deg)`;
+}
+
+function typeText(text){
+  speechBubble.textContent="";
+  let i=0;
+  const interval = setInterval(()=>{ speechBubble.textContent+=text[i]; i++; if(i>=text.length) clearInterval(interval); },25);
+}
+
+function createConfetti(){
+  for(let i=0;i<100;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=["#ff5e78","#ffd6a5","#ff9aa0","#f9f871","#a0e7e5","#b4f8c8","#ffb347","#ffcc33"][Math.floor(Math.random()*8)];
+    c.style.width=c.style.height=(5+Math.random()*7)+"px";
+    c.style.animationDuration=(4+Math.random()*3)+"s";
+    document.body.appendChild(c);
+    setTimeout(()=>{ c.remove(); },7000);
+  }
+}
+
+noBtn.addEventListener("mouseenter", noHoverEffect);
+
+noBtn.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  noHoverEffect();
+}, { passive: false });
+
+yesBtn.onclick = ()=>{
+  yesClicked=true;
+  characterImg.src="./wimpy-stickman-happy.png";
+  createConfetti();
+  mainContainer.style.display="none";
+  celebrateContainer.style.display="flex";
+};
+</script>
+</body>
+</html>
